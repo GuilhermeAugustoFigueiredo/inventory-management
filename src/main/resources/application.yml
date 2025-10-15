@@ -1,0 +1,8 @@
+server:
+  servlet:
+    context-path: /inventory-management
+  port: 8080
+
+  h2:
+    console:
+      enabled: true
