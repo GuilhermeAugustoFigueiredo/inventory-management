@@ -46,7 +46,7 @@ public class ProdutoMapper {
         );
     }
 
-    public static Produto toEntity(ProdutoCadastroDto dto, Long id) {
+    public static Produto toEntity(ProdutoAtualizacaoDto dto, Long id) {
         if (dto == null) {
             return null;
         }
