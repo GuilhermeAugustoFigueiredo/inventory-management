@@ -69,15 +69,21 @@ public class ProdutoService {
         return produtos;
     }
 
-    public List<Produto> buscarPorNome(String nome) {
+    public Produto buscarPorNome(String nome) {
         List<Produto> produtos = produtoRepository.findAll();
+        Produto produtoFound = null;
+
         if (produtos.isEmpty())
             return null;
 
         for (Produto p : produtos) {
             if (p.getNome().equalsIgnoreCase(nome))
-                produtos.add(p);
+                produtoFound = p;
         }
-        return produtos;
+
+        if (produtoFound == null)
+            throw new EntidadeNaoEncontradaException(String.format("Produto de nome %s nao encontrado".formatted(nome)));
+
+        return produtoFound;
     }
 }
