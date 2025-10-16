@@ -1,4 +1,7 @@
 package com.guilherme.demo.repository;
 
-public class UsuarioRepository {
+import com.guilherme.demo.entity.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }
