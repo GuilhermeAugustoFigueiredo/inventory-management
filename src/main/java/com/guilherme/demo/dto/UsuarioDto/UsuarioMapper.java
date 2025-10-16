@@ -45,7 +45,7 @@ public class UsuarioMapper {
         );
     }
 
-    public static Usuario toEntity(UsuarioCadastroDto dto, Long id) {
+    public static Usuario toEntity(UsuarioAtualizacaoDto dto, Long id) {
         if (dto == null) {
             return null;
         }
