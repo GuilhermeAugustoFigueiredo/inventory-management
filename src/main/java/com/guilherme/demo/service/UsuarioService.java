@@ -1,6 +1,7 @@
 package com.guilherme.demo.service;
 
 import com.guilherme.demo.entity.Usuario;
+import com.guilherme.demo.exception.EntidadeNaoEncontradaException;
 import com.guilherme.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

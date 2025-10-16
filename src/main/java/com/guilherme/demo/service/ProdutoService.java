@@ -1,6 +1,7 @@
 package com.guilherme.demo.service;
 
 import com.guilherme.demo.entity.Produto;
+import com.guilherme.demo.exception.EntidadeNaoEncontradaException;
 import com.guilherme.demo.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
