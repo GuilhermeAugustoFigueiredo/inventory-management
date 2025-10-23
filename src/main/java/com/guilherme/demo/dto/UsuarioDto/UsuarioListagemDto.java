@@ -1,5 +1,6 @@
 package com.guilherme.demo.dto.UsuarioDto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class UsuarioListagemDto {
     private String nome;
     private String cpf;
     private String cargo;
+    private String email;
     private Double salario;
     private Boolean ativo;
 }

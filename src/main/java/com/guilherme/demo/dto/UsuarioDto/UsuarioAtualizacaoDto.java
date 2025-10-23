@@ -19,6 +19,8 @@ public class UsuarioAtualizacaoDto {
     private String cpf;
     @NotBlank
     private String cargo;
+    @NotBlank
+    private String email;
     @NotNull
     @Positive
     private Double salario;
