@@ -13,6 +13,7 @@ public class UsuarioMapper {
         return new UsuarioListagemDto(
                 entity.getId(),
                 entity.getNome(),
+                entity.getEmail(),
                 entity.getCpf(),
                 entity.getCargo(),
                 entity.getSalario(),
@@ -38,6 +39,7 @@ public class UsuarioMapper {
         return new Usuario(
                 null,
                 dto.getNome(),
+                dto.getEmail(),
                 dto.getCpf(),
                 dto.getCargo(),
                 dto.getSalario(),
@@ -53,6 +55,7 @@ public class UsuarioMapper {
         return new Usuario(
                 id,
                 dto.getNome(),
+                dto.getEmail(),
                 dto.getCpf(),
                 dto.getCargo(),
                 dto.getSalario(),
