@@ -1,9 +1,11 @@
 package com.guilherme.demo.service;
 
 import com.guilherme.demo.entity.Produto;
+import com.guilherme.demo.event.ProdutoCadastradoEvent;
 import com.guilherme.demo.exception.EntidadeNaoEncontradaException;
 import com.guilherme.demo.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +15,14 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final ApplicationEventPublisher eventPublisher;
+    private final UsuarioService usuarioService;
 
     public Produto cadastrar(Produto produto) {
+        System.out.println("Produto " + produto.getNome() + " salvo!");
+        var evento = new ProdutoCadastradoEvent(produto);
+        eventPublisher.publishEvent(evento);
+        usuarioService.handleProdutoCadastrado(evento);
         return produtoRepository.save(produto);
     }
 
