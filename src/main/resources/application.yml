@@ -2,6 +2,17 @@ server:
   servlet:
     context-path: /inventory-management
   port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
 
   h2:
     console:
