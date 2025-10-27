@@ -22,12 +22,6 @@ public class UsuarioService {
         }
     }
 
-    public void handleProdutoCadastrado(ProdutoCadastradoEvent event){
-        Produto produto = event.getProduto();
-        List<Usuario> gerentes = usuarioRepository.findByCargoIgnoreCase("Gerente");
-        enviarNotificacao(gerentes, produto);
-    }
-
     public Usuario cadastrar(Usuario usuario){
         return usuarioRepository.save(usuario);
     }
@@ -59,14 +53,10 @@ public class UsuarioService {
     }
 
     public List<Usuario> buscarPorCargo(String cargo){
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.findByCargoIgnoreCase(cargo);
         if (usuarios.isEmpty())
             return null;
 
-        for(Usuario u : usuarios) {
-            if (u.getCargo().equalsIgnoreCase(cargo))
-                usuarios.add(u);
-        }
         return usuarios;
     }
 

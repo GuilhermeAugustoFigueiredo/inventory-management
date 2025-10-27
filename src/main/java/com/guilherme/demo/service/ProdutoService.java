@@ -20,10 +20,9 @@ public class ProdutoService {
 
     public Produto cadastrar(Produto produto) {
         System.out.println("Produto " + produto.getNome() + " salvo!");
-        var evento = new ProdutoCadastradoEvent(produto);
-        eventPublisher.publishEvent(evento);
-        usuarioService.handleProdutoCadastrado(evento);
-        return produtoRepository.save(produto);
+        Produto salvo = produtoRepository.save(produto);
+        eventPublisher.publishEvent(new ProdutoCadastradoEvent(salvo));
+        return salvo;
     }
 
     public Produto buscarPorId(Long id) {
