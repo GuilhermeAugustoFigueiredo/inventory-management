@@ -1,5 +1,6 @@
 package com.guilherme.demo.service;
 
+import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.entity.Usuario;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
@@ -16,14 +17,14 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public void enviarNotificacao(List<Usuario> gerentes, Produto produto){
+    public void enviarNotificacao(List<Usuario> gerentes, ProdutoRequestDto produto){
         for (Usuario u : gerentes) {
-            System.out.println("Enviando email para " + u.getEmail());
+            System.out.println("Enviando email para " + u.getEmail() + "cadastro do produto " + produto.getNome() + " com sucesso");
         }
     }
 
     public void handleProdutoCadastrado(ProdutoCadastradoEvent event){
-        Produto produto = event.getProduto();
+        ProdutoRequestDto produto = event.getProduto();
         List<Usuario> gerentes = usuarioRepository.findByCargoIgnoreCase("Gerente");
         enviarNotificacao(gerentes, produto);
     }
