@@ -59,7 +59,7 @@ public class ProdutoService {
         if (produtoRepository.existsById(id)) {
             produtoRepository.deleteById(id);
         } else {
-            throw new EntidadeNaoEncontradaException(String.format("Produto de id %d nao encontrado".formatted(id)));
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com o id: " + id);
         }
     }
 

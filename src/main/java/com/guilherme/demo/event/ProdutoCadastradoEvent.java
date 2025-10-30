@@ -1,15 +1,16 @@
 package com.guilherme.demo.event;
 
+import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
 import com.guilherme.demo.entity.Produto;
 
 public class ProdutoCadastradoEvent {
-    private final Produto produto;
+    private final ProdutoRequestDto produto;
 
-    public ProdutoCadastradoEvent(Produto produto) {
+    public ProdutoCadastradoEvent(ProdutoRequestDto produto) {
         this.produto = produto;
     }
 
-    public Produto getProduto() {
+    public ProdutoRequestDto getProduto() {
         return produto;
     }
 }
