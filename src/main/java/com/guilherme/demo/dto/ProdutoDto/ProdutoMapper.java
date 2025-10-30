@@ -45,19 +45,4 @@ public class ProdutoMapper {
                 dto.getPrecoUnitario()
         );
     }
-
-    public static Produto toEntity(ProdutoAtualizacaoDto dto, Long id) {
-        if (dto == null) {
-            return null;
-        }
-
-        return new Produto(
-                id,
-                dto.getCategoria(),
-                dto.getMarca(),
-                dto.getNome(),
-                dto.getPrecoUnitario(),
-                dto.getPrecoUnitario()
-        );
-    }
 }

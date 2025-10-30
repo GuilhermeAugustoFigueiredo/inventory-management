@@ -44,8 +44,7 @@ public class ProdutoController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponseDto> buscarPorId(@PathVariable Long id){
-        ProdutoResponseDto produtoFound = produtoService.buscarPorId(id);
-        return ResponseEntity.status(200).body(produtoFound);
+        return ResponseEntity.status(200).body(produtoService.buscarPorId(id));
     }
 
     @Operation(summary = "Finds a product by its name")
@@ -56,8 +55,7 @@ public class ProdutoController {
     })
     @GetMapping("/nome")
     public ResponseEntity<ProdutoResponseDto> buscarPorNome(@RequestParam String nome){
-        var produtoFound = produtoService.buscarPorNome(nome);
-        return ResponseEntity.status(200).body(produtoFound);
+        return ResponseEntity.status(200).body(produtoService.buscarPorNome(nome));
     }
 
     @Operation(summary = "Finds products by brand")
@@ -68,8 +66,7 @@ public class ProdutoController {
     })
     @GetMapping("/marca")
     public ResponseEntity<List<ProdutoResponseDto>> buscarPorMarca(@RequestParam String marca){
-        var produtosFound = produtoService.buscarPorMarca(marca);
-        return ResponseEntity.status(200).body(produtosFound);
+        return ResponseEntity.status(200).body(produtoService.buscarPorMarca(marca));
     }
 
     @Operation(summary = "Finds products by category")
@@ -80,8 +77,7 @@ public class ProdutoController {
     })
     @GetMapping("/categoria")
     public ResponseEntity<List<ProdutoResponseDto>> buscarPorCategoria(@RequestParam String categoria){
-        var produtosFound = produtoService.buscarPorMarca(categoria);
-        return ResponseEntity.status(200).body(produtosFound);
+        return ResponseEntity.status(200).body(produtoService.buscarPorMarca(categoria));
     }
 
     @Operation(summary = "Registers a new product")
@@ -96,8 +92,7 @@ public class ProdutoController {
     })
     @PostMapping
     public ResponseEntity<ProdutoResponseDto> cadastrar(@Valid @RequestBody ProdutoRequestDto produtoRequest){
-        ProdutoResponseDto produtoCadastrado = produtoService.cadastrar(produtoRequest);
-        return ResponseEntity.status(201).body(produtoCadastrado);
+        return ResponseEntity.status(201).body(produtoService.cadastrar(produtoRequest));
     }
 
     @Operation(summary = "Updates an existing product by its ID")
@@ -111,9 +106,8 @@ public class ProdutoController {
                     content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDto produtoRequest) {
-        ProdutoResponseDto produtoAtualizado = produtoService.atualizar(id, produtoRequest);
-        return ResponseEntity.status(200).body(produtoAtualizado);
+        public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDto produtoRequest) {
+        return ResponseEntity.status(200).body(produtoService.atualizar(id, produtoRequest));
     }
 
     @Operation(summary = "Removes a product by its ID")

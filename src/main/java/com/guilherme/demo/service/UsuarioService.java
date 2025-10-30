@@ -60,7 +60,7 @@ public class UsuarioService {
     }
 
     public List<Usuario> buscarPorCargo(String cargo){
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.findByCargoContainsIgnoreCase(cargo);
         if (usuarios.isEmpty())
             return null;
 
