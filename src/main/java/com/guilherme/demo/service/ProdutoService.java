@@ -51,47 +51,27 @@ public class ProdutoService {
         }
     }
 
-    // estou repetindo metodos, acredito que existe uma forma melhor para nao ficar repetindo codigo
-
     public List<Produto> buscarPorCategoria(String categoria) {
-        List<Produto> produtos = produtoRepository.findAll();
+        List<Produto> produtos = produtoRepository.findByCategoriaContainsIgnoreCase(categoria);
         if (produtos.isEmpty())
-            return null;
-
-        for (Produto p : produtos) {
-            if (p.getCategoria().equalsIgnoreCase(categoria))
-                produtos.add(p);
-        }
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado para a categoria '" + categoria + "'.");
         return produtos;
     }
 
     public List<Produto> buscarPorMarca(String marca) {
-        List<Produto> produtos = produtoRepository.findAll();
+        List<Produto> produtos = produtoRepository.findByMarcaContainsIgnoreCase(marca);
         if (produtos.isEmpty())
             return null;
-
-        for (Produto p : produtos) {
-            if (p.getMarca().equalsIgnoreCase(marca))
-                produtos.add(p);
-        }
         return produtos;
     }
 
+
     public Produto buscarPorNome(String nome) {
-        List<Produto> produtos = produtoRepository.findAll();
-        Produto produtoFound = null;
-
-        if (produtos.isEmpty())
-            return null;
-
-        for (Produto p : produtos) {
-            if (p.getNome().equalsIgnoreCase(nome))
-                produtoFound = p;
+        Produto produto = produtoRepository.findByNomeContainsIgnoreCase(nome);
+        if (produto == null) {
+            throw new EntidadeNaoEncontradaException("Produto com nome '" + nome + "' não encontrado.");
         }
-
-        if (produtoFound == null)
-            throw new EntidadeNaoEncontradaException(String.format("Produto de nome %s nao encontrado".formatted(nome)));
-
-        return produtoFound;
+        return produto;
     }
+
 }
