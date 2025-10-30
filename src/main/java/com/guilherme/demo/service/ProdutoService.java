@@ -1,5 +1,8 @@
 package com.guilherme.demo.service;
 
+import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
+import com.guilherme.demo.dto.ProdutoDto.ProdutoResponseDto;
+import com.guilherme.demo.dto.ProdutoDto.ProdutoMapper;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
 import com.guilherme.demo.exception.EntidadeNaoEncontradaException;
@@ -18,60 +21,71 @@ public class ProdutoService {
     private final ApplicationEventPublisher eventPublisher;
     private final UsuarioService usuarioService;
 
-    public Produto cadastrar(Produto produto) {
+    public ProdutoResponseDto cadastrar(ProdutoRequestDto produto) {
         System.out.println("Produto " + produto.getNome() + " salvo!");
-        Produto salvo = produtoRepository.save(produto);
-        eventPublisher.publishEvent(new ProdutoCadastradoEvent(salvo));
-        return salvo;
+        var evento = new ProdutoCadastradoEvent(produto);
+        eventPublisher.publishEvent(evento);
+        usuarioService.handleProdutoCadastrado(evento);
+
+        Produto produtoSalvo = produtoRepository.save(ProdutoMapper.toEntity(produto));
+        return ProdutoMapper.toResponseDto(produtoSalvo);
     }
 
-    public Produto buscarPorId(Long id) {
-        return produtoRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Produto de id %d nao encontrado".formatted(id))));
+    public ProdutoResponseDto buscarPorId(Long id) {
+        Produto produtoFound = produtoRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Nenhum produto encontrado com o id: " + id));
+        return ProdutoMapper.toResponseDto(produtoFound);
     }
 
-    public List<Produto> listar() {
-        return produtoRepository.findAll();
+    public List<ProdutoResponseDto> listar() {
+        List<Produto> produtos = produtoRepository.findAll();
+        if (produtos.isEmpty())
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado");
+        return ProdutoMapper.toResponseDtos(produtos);
     }
 
-    public Produto atualizar(Produto produto) {
-        if (produtoRepository.existsById(produto.getId())) {
-            produto.setId(produto.getId());
-            return produtoRepository.save(produto);
-        } else {
-            throw new EntidadeNaoEncontradaException(String.format("Produto de id %d nao encontrado".formatted(produto.getId())));
-        }
+    public ProdutoResponseDto atualizar(Long id, ProdutoRequestDto produto) {
+        Produto produtoUpdate = produtoRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Nenhum produto encontrado com o id: " + id));
+
+        produtoUpdate.setCategoria(produto.getCategoria());
+        produtoUpdate.setNome(produto.getNome());
+        produtoUpdate.setMarca(produto.getMarca());
+        produtoUpdate.setPrecoFinal(produto.getPrecoFinal());
+        produtoUpdate.setPrecoFinal(produto.getPrecoFinal());
+
+        Produto produtoSave = produtoRepository.save(produtoUpdate);
+
+        return ProdutoMapper.toResponseDto(produtoSave);
     }
 
     public void removerPorId(Long id) {
         if (produtoRepository.existsById(id)) {
             produtoRepository.deleteById(id);
         } else {
-            throw new EntidadeNaoEncontradaException(String.format("Produto de id %d nao encontrado".formatted(id)));
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com o id: " + id);
         }
     }
 
-    public List<Produto> buscarPorCategoria(String categoria) {
-        List<Produto> produtos = produtoRepository.findByCategoriaContainsIgnoreCase(categoria);
+    public List<ProdutoResponseDto> buscarPorCategoria(String categoria) {
+        List<Produto> produtos = produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
         if (produtos.isEmpty())
-            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado para a categoria '" + categoria + "'.");
-        return produtos;
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com a categoria: " + categoria);
+        return ProdutoMapper.toResponseDtos(produtos);
     }
 
-    public List<Produto> buscarPorMarca(String marca) {
-        List<Produto> produtos = produtoRepository.findByMarcaContainsIgnoreCase(marca);
+    public List<ProdutoResponseDto> buscarPorMarca(String marca) {
+        List<Produto> produtos = produtoRepository.findByMarcaContainingIgnoreCase(marca);
         if (produtos.isEmpty())
-            return null;
-        return produtos;
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com a marca: " + marca);
+        return ProdutoMapper.toResponseDtos(produtos);
     }
 
-
-    public Produto buscarPorNome(String nome) {
-        Produto produto = produtoRepository.findByNomeContainsIgnoreCase(nome);
-        if (produto == null) {
-            throw new EntidadeNaoEncontradaException("Produto com nome '" + nome + "' não encontrado.");
-        }
-        return produto;
+    public ProdutoResponseDto buscarPorNome(String nome) {
+        var produtoFound = produtoRepository.findByNomeContainingIgnoreCase(nome);
+        if (produtoFound == null)
+            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com o nome: " + nome);
+        return ProdutoMapper.toResponseDto(produtoFound);
     }
 
 }

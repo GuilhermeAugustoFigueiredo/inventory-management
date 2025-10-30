@@ -6,12 +6,12 @@ import java.util.List;
 
 public class ProdutoMapper {
 
-    public static ProdutoListagemDto toListagemDto(Produto entity) {
+    public static ProdutoResponseDto toResponseDto(Produto entity) {
         if (entity == null) {
             return null;
         }
 
-        return new ProdutoListagemDto(
+        return new ProdutoResponseDto(
                 entity.getId(),
                 entity.getCategoria(),
                 entity.getMarca(),
@@ -21,17 +21,17 @@ public class ProdutoMapper {
         );
     }
 
-    public static List<ProdutoListagemDto> toListagemDtos(List<Produto> entities) {
+    public static List<ProdutoResponseDto> toResponseDtos(List<Produto> entities) {
         if (entities == null) {
             return null;
         }
 
         return entities.stream()
-                .map(ProdutoMapper::toListagemDto)
+                .map(ProdutoMapper::toResponseDto)
                 .toList();
     }
 
-    public static Produto toEntity(ProdutoCadastroDto dto) {
+    public static Produto toEntity(ProdutoRequestDto dto) {
         if (dto == null) {
             return null;
         }

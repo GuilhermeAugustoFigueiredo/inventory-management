@@ -1,10 +1,7 @@
 package com.guilherme.demo.controller;
 
-import com.guilherme.demo.dto.ProdutoDto.ProdutoAtualizacaoDto;
-import com.guilherme.demo.dto.ProdutoDto.ProdutoCadastroDto;
-import com.guilherme.demo.dto.ProdutoDto.ProdutoListagemDto;
-import com.guilherme.demo.dto.ProdutoDto.ProdutoMapper;
-import com.guilherme.demo.entity.Produto;
+import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
+import com.guilherme.demo.dto.ProdutoDto.ProdutoResponseDto;
 import com.guilherme.demo.service.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,16 +29,11 @@ public class ProdutoController {
                     content = @Content)
     })
     @GetMapping
-    public ResponseEntity<List<ProdutoListagemDto>> listar(){
-        List<Produto> produtos = produtoService.listar();
-
-        if (produtos.isEmpty()){
+    public ResponseEntity<List<ProdutoResponseDto>> listar(){
+        List<ProdutoResponseDto> produtos = produtoService.listar();
+        if (produtos.isEmpty())
             return ResponseEntity.status(204).build();
-        }
-
-        List<ProdutoListagemDto> produtosResponse = ProdutoMapper.toListagemDtos(produtos);
-
-        return ResponseEntity.status(200).body(produtosResponse);
+        return ResponseEntity.status(200).body(produtos);
     }
 
     @Operation(summary = "Finds a product by its ID")
@@ -51,10 +43,9 @@ public class ProdutoController {
                     content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoListagemDto> buscarPorId(@PathVariable Long id){
-        Produto produtoFound = produtoService.buscarPorId(id);
-        var produtoFoundResponse = ProdutoMapper.toListagemDto(produtoFound);
-        return ResponseEntity.status(200).body(produtoFoundResponse);
+    public ResponseEntity<ProdutoResponseDto> buscarPorId(@PathVariable Long id){
+        ProdutoResponseDto produtoFound = produtoService.buscarPorId(id);
+        return ResponseEntity.status(200).body(produtoFound);
     }
 
     @Operation(summary = "Finds a product by its name")
@@ -64,10 +55,9 @@ public class ProdutoController {
                     content = @Content)
     })
     @GetMapping("/nome")
-    public ResponseEntity<ProdutoListagemDto> buscarPorNome(@RequestParam String nome){
+    public ResponseEntity<ProdutoResponseDto> buscarPorNome(@RequestParam String nome){
         var produtoFound = produtoService.buscarPorNome(nome);
-        var produtoResponse = ProdutoMapper.toListagemDto(produtoFound);
-        return ResponseEntity.status(200).body(produtoResponse);
+        return ResponseEntity.status(200).body(produtoFound);
     }
 
     @Operation(summary = "Finds products by brand")
@@ -77,10 +67,9 @@ public class ProdutoController {
                     content = @Content)
     })
     @GetMapping("/marca")
-    public ResponseEntity<List<ProdutoListagemDto>> buscarPorMarca(@RequestParam String marca){
+    public ResponseEntity<List<ProdutoResponseDto>> buscarPorMarca(@RequestParam String marca){
         var produtosFound = produtoService.buscarPorMarca(marca);
-        var produtosResponse = ProdutoMapper.toListagemDtos(produtosFound);
-        return ResponseEntity.status(200).body(produtosResponse);
+        return ResponseEntity.status(200).body(produtosFound);
     }
 
     @Operation(summary = "Finds products by category")
@@ -90,46 +79,41 @@ public class ProdutoController {
                     content = @Content)
     })
     @GetMapping("/categoria")
-    public ResponseEntity<List<ProdutoListagemDto>> buscarPorCategoria(@RequestParam String categoria){
+    public ResponseEntity<List<ProdutoResponseDto>> buscarPorCategoria(@RequestParam String categoria){
         var produtosFound = produtoService.buscarPorMarca(categoria);
-        var produtosResponse = ProdutoMapper.toListagemDtos(produtosFound);
-        return ResponseEntity.status(200).body(produtosResponse);
+        return ResponseEntity.status(200).body(produtosFound);
     }
 
     @Operation(summary = "Registers a new product")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product registered successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoListagemDto.class)) }),
+                            schema = @Schema(implementation = ProdutoResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
                     content = @Content),
             @ApiResponse(responseCode = "409", description = "Product with this name/SKU already exists",
                     content = @Content)
     })
     @PostMapping
-    public ResponseEntity<ProdutoListagemDto> cadastrar(@Valid @RequestBody ProdutoCadastroDto produtoRequest){
-        Produto produto = ProdutoMapper.toEntity(produtoRequest);
-        var produtoRegister = produtoService.cadastrar(produto);
-        ProdutoListagemDto produtoResponse = ProdutoMapper.toListagemDto(produtoRegister);
-        return ResponseEntity.status(201).body(produtoResponse);
+    public ResponseEntity<ProdutoResponseDto> cadastrar(@Valid @RequestBody ProdutoRequestDto produtoRequest){
+        ProdutoResponseDto produtoCadastrado = produtoService.cadastrar(produtoRequest);
+        return ResponseEntity.status(201).body(produtoCadastrado);
     }
 
     @Operation(summary = "Updates an existing product by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product updated successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProdutoListagemDto.class)) }),
+                            schema = @Schema(implementation = ProdutoResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Product not found with the provided ID",
                     content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoListagemDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoAtualizacaoDto produtoRequest) {
-        Produto produto = ProdutoMapper.toEntity(produtoRequest, id);
-        Produto produtoUpdated = produtoService.atualizar(produto);
-        ProdutoListagemDto produtoResponse = ProdutoMapper.toListagemDto(produtoUpdated);
-        return ResponseEntity.status(200).body(produtoResponse);
+    public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDto produtoRequest) {
+        ProdutoResponseDto produtoAtualizado = produtoService.atualizar(id, produtoRequest);
+        return ResponseEntity.status(200).body(produtoAtualizado);
     }
 
     @Operation(summary = "Removes a product by its ID")

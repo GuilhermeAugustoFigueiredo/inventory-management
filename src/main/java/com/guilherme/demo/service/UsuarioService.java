@@ -1,5 +1,6 @@
 package com.guilherme.demo.service;
 
+import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.entity.Usuario;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
@@ -16,10 +17,16 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public void enviarNotificacao(List<Usuario> gerentes, Produto produto){
+    public void enviarNotificacao(List<Usuario> gerentes, ProdutoRequestDto produto){
         for (Usuario u : gerentes) {
-            System.out.println("Enviando email para " + u.getEmail());
+            System.out.println("Enviando email para " + u.getEmail() + "cadastro do produto " + produto.getNome() + " com sucesso");
         }
+    }
+
+    public void handleProdutoCadastrado(ProdutoCadastradoEvent event){
+        ProdutoRequestDto produto = event.getProduto();
+        List<Usuario> gerentes = usuarioRepository.findByCargoIgnoreCase("Gerente");
+        enviarNotificacao(gerentes, produto);
     }
 
     public Usuario cadastrar(Usuario usuario){
@@ -53,10 +60,14 @@ public class UsuarioService {
     }
 
     public List<Usuario> buscarPorCargo(String cargo){
-        List<Usuario> usuarios = usuarioRepository.findByCargoIgnoreCase(cargo);
+        List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios.isEmpty())
             return null;
 
+        for(Usuario u : usuarios) {
+            if (u.getCargo().equalsIgnoreCase(cargo))
+                usuarios.add(u);
+        }
         return usuarios;
     }
 
