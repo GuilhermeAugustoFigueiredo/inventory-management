@@ -87,4 +87,5 @@ public class ProdutoService {
             throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com o nome: " + nome);
         return ProdutoMapper.toResponseDto(produtoFound);
     }
+
 }
