@@ -1,8 +1,7 @@
 package com.guilherme.demo.controller;
 
-import com.guilherme.demo.dto.UsuarioDto.UsuarioAtualizacaoDto;
-import com.guilherme.demo.dto.UsuarioDto.UsuarioCadastroDto;
-import com.guilherme.demo.dto.UsuarioDto.UsuarioListagemDto;
+import com.guilherme.demo.dto.UsuarioDto.UsuarioRequestDto;
+import com.guilherme.demo.dto.UsuarioDto.UsuarioResponseDto;
 import com.guilherme.demo.dto.UsuarioDto.UsuarioMapper;
 import com.guilherme.demo.entity.Usuario;
 import com.guilherme.demo.service.UsuarioService;
@@ -31,12 +30,12 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "No users found")
     })
     @GetMapping
-    public ResponseEntity<List<UsuarioListagemDto>> listar(){
+    public ResponseEntity<List<UsuarioResponseDto>> listar(){
         List<Usuario> usuarios = usuarioService.listar();
         if (usuarios.isEmpty()){
             return ResponseEntity.status(204).build();
         }
-        List<UsuarioListagemDto> usuariosResponse = UsuarioMapper.toListagemDtos(usuarios);
+        List<UsuarioResponseDto> usuariosResponse = UsuarioMapper.toResponseDtos(usuarios);
         return ResponseEntity.status(200).body(usuariosResponse);
     }
 
@@ -46,9 +45,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "No users found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioListagemDto> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<UsuarioResponseDto> buscarPorId(@PathVariable Long id){
         Usuario usuarioFound = usuarioService.buscarPorId(id);
-        var usuarioFoundResponse = UsuarioMapper.toListagemDto(usuarioFound);
+        var usuarioFoundResponse = UsuarioMapper.toResponseDto(usuarioFound);
         return ResponseEntity.status(200).body(usuarioFoundResponse);
     }
 
@@ -58,9 +57,9 @@ public class UsuarioController {
             @ApiResponse(responseCode = "204", description = "No users found")
     })
     @GetMapping("/cargo")
-    public ResponseEntity<List<UsuarioListagemDto>> buscarPorCargo(@RequestParam String cargo){
+    public ResponseEntity<List<UsuarioResponseDto>> buscarPorCargo(@RequestParam String cargo){
         List<Usuario> usuariosFound = usuarioService.buscarPorCargo(cargo);
-        var usuariosFoundResponse = UsuarioMapper.toListagemDtos(usuariosFound);
+        var usuariosFoundResponse = UsuarioMapper.toResponseDtos(usuariosFound);
         return ResponseEntity.status(200).body(usuariosFoundResponse);
     }
 
@@ -69,17 +68,17 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User registered successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UsuarioListagemDto.class)) }),
+                            schema = @Schema(implementation = UsuarioResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
                     content = @Content),
             @ApiResponse(responseCode = "409", description = "User with this email already exists",
                     content = @Content)
     })
     @PostMapping
-    public ResponseEntity<UsuarioListagemDto> cadastrar(@Valid @RequestBody UsuarioCadastroDto usuarioRequest){
+    public ResponseEntity<UsuarioResponseDto> cadastrar(@Valid @RequestBody UsuarioRequestDto usuarioRequest){
         Usuario usuario = UsuarioMapper.toEntity(usuarioRequest);
         var usuarioRegister = usuarioService.cadastrar(usuario);
-        UsuarioListagemDto usuarioResponse = UsuarioMapper.toListagemDto(usuarioRegister);
+        UsuarioResponseDto usuarioResponse = UsuarioMapper.toResponseDto(usuarioRegister);
         return ResponseEntity.status(201).body(usuarioResponse);
     }
 
@@ -88,17 +87,17 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UsuarioListagemDto.class)) }),
+                            schema = @Schema(implementation = UsuarioResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid input data",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found with the provided ID",
                     content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioListagemDto> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioAtualizacaoDto usuarioRequest) {
-        Usuario usuario = UsuarioMapper.toEntity(usuarioRequest, id);
+    public ResponseEntity<UsuarioResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody UsuarioRequestDto usuarioRequest) {
+        Usuario usuario = UsuarioMapper.toEntity(usuarioRequest);
         Usuario usuarioUpdated = usuarioService.atualizar(usuario);
-        UsuarioListagemDto usuarioResponse = UsuarioMapper.toListagemDto(usuarioUpdated);
+        UsuarioResponseDto usuarioResponse = UsuarioMapper.toResponseDto(usuarioUpdated);
         return ResponseEntity.status(200).body(usuarioResponse);
     }
 

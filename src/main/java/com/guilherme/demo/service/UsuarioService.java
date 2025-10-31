@@ -17,15 +17,15 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public void enviarNotificacao(List<Usuario> gerentes, ProdutoRequestDto produto){
+    public void enviarNotificacao(List<Usuario> gerentes, Produto produto){
         for (Usuario u : gerentes) {
             System.out.println("Enviando email para " + u.getEmail() + "cadastro do produto " + produto.getNome() + " com sucesso");
         }
     }
 
     public void handleProdutoCadastrado(ProdutoCadastradoEvent event){
-        ProdutoRequestDto produto = event.getProduto();
-        List<Usuario> gerentes = usuarioRepository.findByCargoIgnoreCase("Gerente");
+        Produto produto = event.getProduto();
+        List<Usuario> gerentes = usuarioRepository.findByCargoContainsIgnoreCase("Gerente");
         enviarNotificacao(gerentes, produto);
     }
 
@@ -63,11 +63,6 @@ public class UsuarioService {
         List<Usuario> usuarios = usuarioRepository.findByCargoContainsIgnoreCase(cargo);
         if (usuarios.isEmpty())
             return null;
-
-        for(Usuario u : usuarios) {
-            if (u.getCargo().equalsIgnoreCase(cargo))
-                usuarios.add(u);
-        }
         return usuarios;
     }
 

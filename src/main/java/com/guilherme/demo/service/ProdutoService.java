@@ -64,14 +64,14 @@ public class ProdutoService {
     }
 
     public List<ProdutoResponseDto> buscarPorCategoria(String categoria) {
-        List<Produto> produtos = produtoRepository.findByCategoriaContainsIgnoreCase(categoria);
+        List<Produto> produtos = produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
         if (produtos.isEmpty())
             throw new EntidadeNaoEncontradaException("Nenhum produto encontrado para a categoria '" + categoria + "'.");
         return ProdutoMapper.toResponseDtos(produtos);
     }
 
     public List<ProdutoResponseDto> buscarPorMarca(String marca) {
-        List<Produto> produtos = produtoRepository.findByMarcaContainsIgnoreCase(marca);
+        List<Produto> produtos = produtoRepository.findByMarcaContainingIgnoreCase(marca);
         if (produtos.isEmpty())
             return null;
         return ProdutoMapper.toResponseDtos(produtos);
@@ -79,7 +79,7 @@ public class ProdutoService {
 
 
     public ProdutoResponseDto buscarPorNome(String nome) {
-        Produto produto = produtoRepository.findByNomeContainsIgnoreCase(nome);
+        Produto produto = produtoRepository.findByNomeContainingIgnoreCase(nome);
         if (produto == null) {
             throw new EntidadeNaoEncontradaException("Produto com nome '" + nome + "' não encontrado.");
         }

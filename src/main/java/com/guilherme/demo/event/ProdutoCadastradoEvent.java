@@ -4,13 +4,13 @@ import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
 import com.guilherme.demo.entity.Produto;
 
 public class ProdutoCadastradoEvent {
-    private final ProdutoRequestDto produto;
+    private final Produto produto;
 
-    public ProdutoCadastradoEvent(ProdutoRequestDto produto) {
+    public ProdutoCadastradoEvent(Produto produto) {
         this.produto = produto;
     }
 
-    public ProdutoRequestDto getProduto() {
+    public Produto getProduto() {
         return produto;
     }
 }
