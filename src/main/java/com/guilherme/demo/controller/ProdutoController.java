@@ -31,9 +31,9 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<List<ProdutoResponseDto>> listar(){
         List<ProdutoResponseDto> produtos = produtoService.listar();
-        if (produtos.isEmpty())
-            return ResponseEntity.status(204).build();
-        return ResponseEntity.status(200).body(produtos);
+        return produtos.isEmpty()
+                ? ResponseEntity.status(204).build()
+                :ResponseEntity.status(200).body(produtos);
     }
 
     @Operation(summary = "Finds a product by its ID")
@@ -108,6 +108,13 @@ public class ProdutoController {
     @PutMapping("/{id}")
         public ResponseEntity<ProdutoResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody ProdutoRequestDto produtoRequest) {
         return ResponseEntity.status(200).body(produtoService.atualizar(id, produtoRequest));
+    }
+
+    @CrossOrigin("*")
+    @PatchMapping(value = "/foto/{idProduto}", consumes = "image/*")
+    public ResponseEntity<Void> patchFoto(@PathVariable Long idProduto, @RequestBody byte[] novaFoto) {
+        produtoService.adicionarFoto(idProduto, novaFoto);
+        return ResponseEntity.status(200).build();
     }
 
     @Operation(summary = "Removes a product by its ID")
