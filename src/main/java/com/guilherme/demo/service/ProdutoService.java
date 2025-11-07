@@ -10,6 +10,8 @@ import com.guilherme.demo.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -84,5 +86,11 @@ public class ProdutoService {
             throw new DataNotFoundException("Não existe um produto com esse ID", "Produtos");
         }
         return ProdutoMapper.toResponseDto(produto);
+    }
+
+    public void adicionarFoto(Long idProduto, byte[] novaFoto){
+        if (!produtoRepository.existsById(idProduto))
+            throw new DataNotFoundException("Não existe um produto com esse ID", "Produtos");
+        produtoRepository.setFoto(idProduto, novaFoto);
     }
 }

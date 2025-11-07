@@ -1,9 +1,7 @@
 package com.guilherme.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +22,7 @@ public class Usuario {
     private String cargo;
     private Double salario;
     private Boolean ativo;
+    @JsonIgnore
+    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
+    private byte[] foto;
 }

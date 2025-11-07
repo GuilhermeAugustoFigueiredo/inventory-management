@@ -1,10 +1,8 @@
 package com.guilherme.demo.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +22,7 @@ public class Produto {
     private String nome;
     private Double precoUnitario;
     private Double precoFinal;
+    @JsonIgnore
+    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
+    private byte[] foto;
 }

@@ -16,4 +16,5 @@ public class ProdutoResponseDto {
     private String nome;
     private Double precoUnitario;
     private Double precoFinal;
+    private byte[] foto;
 }

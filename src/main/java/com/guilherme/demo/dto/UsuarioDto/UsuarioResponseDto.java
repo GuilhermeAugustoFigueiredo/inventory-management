@@ -17,4 +17,5 @@ public class UsuarioResponseDto {
     private String email;
     private Double salario;
     private Boolean ativo;
+    private byte[] foto;
 }

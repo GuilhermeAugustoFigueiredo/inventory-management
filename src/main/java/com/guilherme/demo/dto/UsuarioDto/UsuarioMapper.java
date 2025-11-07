@@ -19,6 +19,7 @@ public class UsuarioMapper {
         responseDto.setCargo(entity.getCargo());
         responseDto.setSalario(entity.getSalario());
         responseDto.setAtivo(entity.getAtivo());
+        responseDto.setFoto(entity.getFoto());
 
         return responseDto;
     }

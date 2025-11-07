@@ -17,7 +17,8 @@ public class ProdutoMapper {
                 entity.getMarca(),
                 entity.getNome(),
                 entity.getPrecoUnitario(),
-                entity.getPrecoFinal()
+                entity.getPrecoFinal(),
+                entity.getFoto()
         );
     }
 
@@ -42,7 +43,8 @@ public class ProdutoMapper {
                 dto.getMarca(),
                 dto.getNome(),
                 dto.getPrecoUnitario(),
-                dto.getPrecoUnitario()
+                dto.getPrecoUnitario(),
+                null
         );
     }
 }

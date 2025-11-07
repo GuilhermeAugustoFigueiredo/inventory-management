@@ -133,6 +133,13 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuarioRequest));
     }
 
+    @CrossOrigin("*")
+    @PatchMapping(value = "/foto/{idProduto}", consumes = "image/*")
+    public ResponseEntity<Void> patchFoto(@PathVariable Long idUsuario, @RequestBody byte[] novaFoto) {
+        usuarioService.adicionarFoto(idUsuario, novaFoto);
+        return ResponseEntity.status(200).build();
+    }
+
     @Operation(summary = "Removes a user by ID",
             description = "Permanently deletes a user from the system based on their ID.")
     @ApiResponses(value = {

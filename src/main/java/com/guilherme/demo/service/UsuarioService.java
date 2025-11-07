@@ -10,7 +10,12 @@ import com.guilherme.demo.exception.ConflictException;
 import com.guilherme.demo.exception.DataNotFoundException;
 import com.guilherme.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -102,5 +107,11 @@ public class UsuarioService {
     public List<UsuarioResponseDto> buscarPorAtivo(Boolean ativo){
         List<Usuario> usuarios = usuarioRepository.findByAtivo(ativo);
         return UsuarioMapper.toResponseDtos(usuarios);
+    }
+
+    public void adicionarFoto(Long idUsuario, byte[] novaFoto) {
+        if (!usuarioRepository.existsById(idUsuario))
+            throw new DataNotFoundException("Não existe um produto com esse ID", "Produtos");
+        usuarioRepository.setFoto(idUsuario, novaFoto);
     }
 }
