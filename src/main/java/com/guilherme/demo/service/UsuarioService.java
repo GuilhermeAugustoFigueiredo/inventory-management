@@ -6,7 +6,8 @@ import com.guilherme.demo.dto.UsuarioDto.UsuarioResponseDto;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.entity.Usuario;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
-import com.guilherme.demo.exception.EntityNotFoundException;
+import com.guilherme.demo.exception.ConflictException;
+import com.guilherme.demo.exception.DataNotFoundException;
 import com.guilherme.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,26 +33,28 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDto cadastrar(UsuarioRequestDto usuario){
+        if(usuarioRepository.existsByCpf((usuario.getCpf()))){
+            throw new ConflictException("O CPF do Usuário informado já foi cadastrado", "Usuários");}
         Usuario usuarioSave = usuarioRepository.save(UsuarioMapper.toEntity(usuario));
         return UsuarioMapper.toResponseDto(usuarioSave);
     }
 
     public UsuarioResponseDto buscarPorId(Long id){
         Usuario usuarioFound = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Usuario de id %d nao encontrado".formatted(id))));
+                .orElseThrow(() -> new DataNotFoundException("Não existe usuário com esse id", "Usuários"));
         return UsuarioMapper.toResponseDto(usuarioFound);
     }
 
     public List<UsuarioResponseDto> listar() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios.isEmpty())
-            throw new EntityNotFoundException("Nenhum usuário encontrado.");
+            throw new DataNotFoundException("Não existem usuários", "Usuários");
         return UsuarioMapper.toResponseDtos(usuarios);
     }
 
     public UsuarioResponseDto atualizar(Long id, UsuarioRequestDto usuarioUpdate){
         Usuario usuarioFound = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Produto de id %d nao encontrado".formatted(id)));
+                .orElseThrow(() -> new DataNotFoundException("Não existe usuário com esse id", "Usuários"));
 
         usuarioFound.setNome(usuarioUpdate.getNome());
         usuarioFound.setCpf(usuarioUpdate.getCpf());
@@ -70,7 +73,7 @@ public class UsuarioService {
         if (usuarioRepository.existsById(id)){
             usuarioRepository.deleteById(id);
         }else {
-            throw new EntityNotFoundException(String.format("Usuario de id %d nao encontrado".formatted(id)));
+            throw new DataNotFoundException("Não existe usuário com esse id", "Usuários");
         }
     }
 
