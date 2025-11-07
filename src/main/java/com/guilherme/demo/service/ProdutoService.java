@@ -5,7 +5,7 @@ import com.guilherme.demo.dto.ProdutoDto.ProdutoRequestDto;
 import com.guilherme.demo.dto.ProdutoDto.ProdutoResponseDto;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
-import com.guilherme.demo.exception.EntidadeNaoEncontradaException;
+import com.guilherme.demo.exception.EntityNotFoundException;
 import com.guilherme.demo.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,7 +31,7 @@ public class ProdutoService {
     public ProdutoResponseDto buscarPorId(Long id) {
 
         Produto produtoFound = produtoRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Produto de id %d nao encontrado".formatted(id))));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Produto de id %d nao encontrado".formatted(id))));
 
         return ProdutoMapper.toResponseDto(produtoFound);
     }
@@ -42,7 +42,7 @@ public class ProdutoService {
 
     public ProdutoResponseDto atualizar(Long id,ProdutoRequestDto produtoUpdate) {
         Produto produtoFound = produtoRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Produto de id %d nao encontrado".formatted(id)));
+                .orElseThrow(() -> new EntityNotFoundException("Produto de id %d nao encontrado".formatted(id)));
 
         produtoFound.setCategoria(produtoUpdate.getCategoria());
         produtoFound.setNome(produtoUpdate.getNome());
@@ -59,14 +59,14 @@ public class ProdutoService {
         if (produtoRepository.existsById(id)) {
             produtoRepository.deleteById(id);
         } else {
-            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado com o id: " + id);
+            throw new EntityNotFoundException("Nenhum produto encontrado com o id: " + id);
         }
     }
 
     public List<ProdutoResponseDto> buscarPorCategoria(String categoria) {
         List<Produto> produtos = produtoRepository.findByCategoriaContainingIgnoreCase(categoria);
         if (produtos.isEmpty())
-            throw new EntidadeNaoEncontradaException("Nenhum produto encontrado para a categoria '" + categoria + "'.");
+            throw new EntityNotFoundException("Nenhum produto encontrado para a categoria '" + categoria + "'.");
         return ProdutoMapper.toResponseDtos(produtos);
     }
 
@@ -81,7 +81,7 @@ public class ProdutoService {
     public ProdutoResponseDto buscarPorNome(String nome) {
         Produto produto = produtoRepository.findByNomeContainingIgnoreCase(nome);
         if (produto == null) {
-            throw new EntidadeNaoEncontradaException("Produto com nome '" + nome + "' não encontrado.");
+            throw new EntityNotFoundException("Produto com nome '" + nome + "' não encontrado.");
         }
         return ProdutoMapper.toResponseDto(produto);
     }

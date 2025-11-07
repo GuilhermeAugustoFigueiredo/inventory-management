@@ -1,5 +1,6 @@
 package com.guilherme.demo.event.handler;
 
+import com.guilherme.demo.dto.UsuarioDto.UsuarioResponseDto;
 import com.guilherme.demo.entity.Produto;
 import com.guilherme.demo.entity.Usuario;
 import com.guilherme.demo.event.ProdutoCadastradoEvent;
@@ -27,9 +28,9 @@ public class ProdutoCadastradoHandler {
 
         System.out.println("[LOG] Produto cadastrado: " + produto.getNome() + " (ID: " + produto.getId() + ")");
 
-        List<Usuario> gerentes = usuarioService.buscarPorCargo("Gerente");
+        List<UsuarioResponseDto> gerentes = usuarioService.buscarPorCargo("Gerente");
 
-        for (Usuario gerente : gerentes) {
+        for (UsuarioResponseDto gerente : gerentes) {
             emailService.enviarEmail(
                     gerente.getEmail(),
                     "Novo produto cadastrado",
