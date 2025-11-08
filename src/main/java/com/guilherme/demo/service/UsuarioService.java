@@ -10,12 +10,7 @@ import com.guilherme.demo.exception.ConflictException;
 import com.guilherme.demo.exception.DataNotFoundException;
 import com.guilherme.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -90,17 +85,17 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDto buscarPorNome(String nome){
-        Usuario usuario = usuarioRepository.findByNomeContainsIgnoreCase(nome);
+        Usuario usuario = usuarioRepository.findByNomeIgnoreCase(nome);
         return UsuarioMapper.toResponseDto(usuario);
     }
 
     public UsuarioResponseDto buscarPorEmail(String email){
-        Usuario usuario = usuarioRepository.findByEmailContainsIgnoreCase(email);
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email);
         return UsuarioMapper.toResponseDto(usuario);
     }
 
     public UsuarioResponseDto buscarPorCpf(String cpf){
-        Usuario usuario = usuarioRepository.findByCpfContainsIgnoreCase(cpf);
+        Usuario usuario = usuarioRepository.findByCpfIgnoreCase(cpf);
         return UsuarioMapper.toResponseDto(usuario);
     }
 
